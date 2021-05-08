@@ -137,7 +137,8 @@ client.on('message', msg => {
     }
 
     if (msg.content.toLowerCase() == prefix + 'avatar') {
-        msg.reply(msg.author.displayAvatarURL());
+        const avatar = new discord.MessageEmbed().setImage(msg.author.avatarURL).setTitle(msg.author.name + '`s avatar');
+        msg.channel.send(avatar);
     }
 
     if (msg.content.toLowerCase() == prefix + 'guess') {
