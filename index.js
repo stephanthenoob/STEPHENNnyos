@@ -105,14 +105,15 @@ client.on('message', msg => {
             { name: 's.kick @user', value: 'Kicks someone..', inline: true },
             { name: 's.dice', value: 'Rolls the dice.', inline: true },
             { name: 's.guess', value: 'Plays the guess the number game.' },
-            { name: 's.avatar @user', value: 'Displays users avatar.'}
+            { name: 's.avatar', value: 'Displays your avatar.'},
+            { name: 's.rps', value: 'Play rock paper and scissors.'},
         )
 
         msg.channel.send(won);
     }
 
     if (msg.content.toLowerCase() == prefix + 'dice') {
-        msg.reply('ok! Rolling....');
+        msg.reply('Ok! Rolling....');
 
         setTimeout(function(){ 
             var bot_roll = Math.floor(Math.random() * 6) + 1;
