@@ -104,7 +104,8 @@ client.on('message', msg => {
             { name: 's.ban @user', value: 'Bans someone...' },
             { name: 's.kick @user', value: 'Kicks someone..', inline: true },
             { name: 's.dice', value: 'Rolls the dice.', inline: true },
-            { name: 's.guess', value: 'Plays the guess the number game.' }
+            { name: 's.guess', value: 'Plays the guess the number game.' },
+            { name: 's.avatar @user', value: 'Displays users avatar.'}
         )
 
         msg.channel.send(won);
@@ -137,8 +138,53 @@ client.on('message', msg => {
     }
 
     if (msg.content.toLowerCase() == prefix + 'avatar') {
-        const avatar = new discord.MessageEmbed().setImage(msg.author.avatarURL).setTitle(msg.author.name + '`s avatar');
-        msg.channel.send(avatar);
+        msg.reply(msg.author.displayAvatarURL());
+    }
+
+    if (msg.content.toLowerCase() == prefix + 'rps') {
+
+        var number = Math.floor(Math.random() * 3) + 1;
+
+        msg.reply('Ok, lets play the game! So basically:');
+        msg.channel.send('1 - ROCK');
+        msg.channel.send('2 - PAPER');
+        msg.channel.send('3 - SCISSORS');
+        msg.channel.send('What you want to choose?');
+        msg.channel.send('`eg type 1 for rock, 2 for paper, 3 for scissors.`');
+
+        msg.channel.awaitMessages(m => m.author.id == msg.author.id,
+            { max: 1, time: 30000
+                }).then(collected => {
+                    if (collected.first().content == '1' && number == 1) {
+                        msg.reply('Tie! Both of you chose Rock.');
+                    }
+                    else if (collected.first().content == '1' && number == 2) {
+                        msg.reply('You lost! Your opponent had Paper.');
+                    }
+                    else if (collected.first().content == '1' && number == 3) {
+                        msg.reply('You won! Your opponent had Scissors.');
+                    }
+                    else if (collected.first().content == '2' && number == 1) {
+                        msg.reply('You won! Your opponent had Rock.');
+                    }
+                    else if (collected.first().content == '2' && number == 2) {
+                        msg.reply('Tie! Both of you chose Paper.');
+                    }
+                    else if (collected.first().content == '2' && number == 3) {
+                        msg.reply('You lost! Your opponent had Scissors.');
+                    }
+                    else if (collected.first().content == '3' && number == 1) {
+                        msg.reply('You lost! Your opponent had Rock.');
+                    }
+                    else if (collected.first().content == '3' && number == 2) {
+                        msg.reply('You won! Your opponent had Paper.');
+                    }
+                    else if (collected.first().content == '3' && number == 3) {
+                        msg.reply('Tie! Both of you had Scissors.');
+                    }
+                }).catch(() => {
+                     msg.reply('Game over... you didnt answer in time.');
+            });
     }
 
     if (msg.content.toLowerCase() == prefix + 'guess') {
