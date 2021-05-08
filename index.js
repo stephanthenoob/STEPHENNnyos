@@ -150,7 +150,6 @@ client.on('message', msg => {
         msg.channel.send('2 - PAPER');
         msg.channel.send('3 - SCISSORS');
         msg.channel.send('What you want to choose?');
-        msg.channel.send('`eg type 1 for rock, 2 for paper, 3 for scissors.`');
 
         msg.channel.awaitMessages(m => m.author.id == msg.author.id,
             { max: 1, time: 30000
