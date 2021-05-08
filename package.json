@@ -1,0 +1,6 @@
+{
+    "main": "bot.js",
+    "dependencies": {
+        "discord.js": "^12.5.3"
+    }
+}
