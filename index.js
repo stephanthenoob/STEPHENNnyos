@@ -120,13 +120,24 @@ client.on('message', msg => {
             const won = new discord.MessageEmbed().setColor('#28fc03').setTitle('You won...').setDescription('Huh.. guess you won.. i rolled ' + bot_roll + ' and you rolled ' + player_roll + ' !').setTimestamp()
             const lost = new discord.MessageEmbed().setColor('#fc0303').setTitle('You lost!').setDescription('Haha! You lost! i rolled ' + bot_roll + ' and you rolled ' + player_roll + ' !').setTimestamp()
 
-            if(bot_roll > player_roll) {
+            if (bot_roll > player_roll) {
                 msg.channel.send(lost);
             }
             else {
                 msg.channel.send(won);
             }
+
+            if (bot_roll == player_roll) {
+                lost.setTitle('Thats a Tie!');
+                lost.setDescription('We both rolled ' + number);
+                lost.setColor('#fca903');
+                msg.channel.send(lost);
+            }
         }, 3000);
+    }
+
+    if (msg.content.toLowerCase() == prefix + 'avatar') {
+        msg.reply(msg.author.displayAvatarURL());
     }
 
     if (msg.content.toLowerCase() == prefix + 'guess') {
