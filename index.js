@@ -12,8 +12,8 @@ client.on('ready', () => {
 
 const distub = new DisTube(client, { searchSongs: false, emitNewSongOnly: true });
 
-mongodb.connect('mongodb+srv://stephan:ital12345@stephan-database.kbrm1.mongodb.net/test/Data', { useNewUrlParser: true, useUnifiedTopology: true});
-mongoCurrency.connect('mongodb+srv://stephan:ital12345@stephan-database.kbrm1.mongodb.net/test/Data');
+mongodb.connect('mongodb+srv://stephan:notstephan@stephandatbazse.e3f59.mongodb.net/test/Data', { useNewUrlParser: true, useUnifiedTopology: true});
+mongoCurrency.connect('mongodb+srv://stephan:notstephan@stephandatbazse.e3f59.mongodb.net/test/Data');
 const prefix = 's.';
 
 client.on('message', msg => {
@@ -55,7 +55,7 @@ client.on('message', msg => {
             return message.channel.send('What ammount of coins?')
         }
 
-        if(messagesplit[2].IsNaN) {
+        if(messagesplit[2].isNaN) {
             return message.channel.send('Thats not an number.');
         }
 
