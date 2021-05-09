@@ -406,7 +406,7 @@ client.on('message', async (msg) => {
     }
 });
 
-client.on("message", async (msg) => {
+async function doSomethingAsync() {
     if (msg.content.startsWith(prefix + 'give')) {
         const member = msg.mentions.members.first();
         var messagesplit = msg.content.split(" ");
@@ -498,6 +498,10 @@ client.on("message", async (msg) => {
       
         msg.reply(`Wallet: ${user.coinsInWallet} \n Bank: ${user.coinsInBank}/${user.bankSpace} \n Total: ${user.coinsInBank + user.coinsInWallet}`);
     }
+}
+
+client.on("message", async (msg) => {
+   doSomethingAsync();
 });
 
 client.on("message", async (message) => {
