@@ -18,7 +18,7 @@ const prefix = 's.';
 
 client.on('message', msg => {
     if (msg.content == 'ez?') {
-        msg.reply('no dude');
+        msg.reply('gays');
     }
 
     if (!msg.author.bot) {
