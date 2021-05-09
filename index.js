@@ -40,23 +40,23 @@ client.on('message', msg => {
     }
 
     if (msg.content.startsWith(prefix + 'give')) {
-        const member = message.mentions.members.first();
+        const member = msg.mentions.members.first();
         var messagesplit = msg.content.split(" ");
 
         if(msg.author.id != '786118118044467260') {
-            return message.channel.send('No permission to do that!');
+            return msg.channel.send('No permission to do that!');
         }
 
         if(!member) {
-            return message.channel.send('What member?')
+            return msg.channel.send('What member?')
         }
 
         if(!messagesplit[2]) {
-            return message.channel.send('What ammount of coins?')
+            return msg.channel.send('What ammount of coins?')
         }
 
         if(messagesplit[2].isNaN) {
-            return message.channel.send('Thats not an number.');
+            return msg.channel.send('Thats not an number.');
         }
 
         mongoCurrency.giveCoins(member.id, msg.guild.id, `${messagesplit[2]}`);
