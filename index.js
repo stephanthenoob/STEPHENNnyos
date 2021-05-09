@@ -43,7 +43,7 @@ client.on('message', msg => {
         const member = msg.mentions.members.first();
         var messagesplit = msg.content.split(" ");
 
-        if(msg.author.id != '786118118044467260') {
+        if(msg.author.id != '692580921169281026') {
             return msg.channel.send('No permission to do that!');
         }
 
