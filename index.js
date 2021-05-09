@@ -12,8 +12,8 @@ client.on('ready', () => {
 
 const distub = new DisTube(client, { searchSongs: false, emitNewSongOnly: true });
 
-mongodb.connect('mongodb+srv://stephan:notstephan@stephandatbazse.e3f59.mongodb.net/test/Data', { useNewUrlParser: true, useUnifiedTopology: true});
-mongoCurrency.connect('mongodb+srv://stephan:notstephan@stephandatbazse.e3f59.mongodb.net/test/Data');
+mongodb.connect('mongodb+srv://stephan:notstephan@stephandatbazse.e3f59.mongodb.net/Data', { useNewUrlParser: true, useUnifiedTopology: true});
+mongoCurrency.connect('mongodb+srv://stephan:notstephan@stephandatbazse.e3f59.mongodb.net/Data');
 const prefix = 's.';
 
 client.on('message', msg => {
