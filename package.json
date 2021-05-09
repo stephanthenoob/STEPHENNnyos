@@ -2,7 +2,9 @@
   "main": "index.js",
   "dependencies": {
     "@discordjs/opus": "^0.5.0",
+    "discord-mongo-currency": "^1.0.4",
     "discord.js": "^12.5.3",
-    "distube": "^2.8.13"
+    "distube": "^2.8.13",
+    "mongoose": "^5.12.7"
   }
 }

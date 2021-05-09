@@ -2,6 +2,8 @@ const token = 'Nzg2MTE4MTE4MDQ0NDY3MjYw.X9BvjA.OFWPM12ZIJWmqGAyX7EkpC78lag';
 
 const discord = require('discord.js');
 const DisTube = require('distube');
+const mongodb = require('mongoose');
+const mongoCurrency = require('discord-mongo-currency');
 const client = new discord.Client();
 
 client.on('ready', () => {
@@ -10,6 +12,8 @@ client.on('ready', () => {
 
 const distub = new DisTube(client, { searchSongs: false, emitNewSongOnly: true });
 
+mongodb.connect('mongodb+srv://stephan:ital12345@stephan-database.kbrm1.mongodb.net/test/Data', { useNewUrlParser: true, useUnifiedTopology: true});
+mongoCurrency.connect('mongodb+srv://stephan:ital12345@stephan-database.kbrm1.mongodb.net/test/Data');
 const prefix = 's.';
 
 client.on('message', msg => {
@@ -33,6 +37,30 @@ client.on('message', msg => {
         else {
             msg.reply('no permissions u dum dum')
         }
+    }
+
+    if (msg.content.startsWith(prefix + 'give')) {
+        const member = message.mentions.members.first();
+        var messagesplit = msg.content.split(" ");
+
+        if(msg.author.id != '786118118044467260') {
+            return message.channel.send('No permission to do that!');
+        }
+
+        if(!member) {
+            return message.channel.send('What member?')
+        }
+
+        if(!messagesplit[2]) {
+            return message.channel.send('What ammount of coins?')
+        }
+
+        if(messagesplit[2].IsNaN) {
+            return message.channel.send('Thats not an number.');
+        }
+
+        await mongoCurrency.giveCoins(member.id, msg.guild.id, `${messagesplit[2]}`);
+        msg.reply('I gave ' + `${member}` + ` ${messagesplit[2]}` + ' coins!');
     }
 
     if (msg.content.startsWith(prefix + 'destroy')) {
@@ -333,14 +361,9 @@ client.on("message", async (message) => {
             `**${id + 1}**. ${song.name} - \`${song.formattedDuration}\``
         ).slice(0, 10).join("\n"));
     }
-
-/*    if ([`3d`, `bassboost`, `echo`, `karaoke`, `nightcore`, `vaporwave`].includes(command)) {
-        let filter = distub.setFilter(message, command);
-        message.channel.send("Current queue filter: " + (filter || "Off"));
-    }*/
 });
 
-const status = (queue) => `volume: \`${queue.volume}%\` ||| loop: \`${queue.repeatMode ? queue.repeatMode == 2 ? "queue" : "current song" : "off"}\` | autoplay: \`${queue.autoplay ? "on" : "off"}\``;
+const status = (queue) => `loop: \`${queue.repeatMode ? queue.repeatMode == 2 ? "queue" : "current song" : "off"}\` ||| autoplay: \`${queue.autoplay ? "on" : "off"}\``;
 
 distub
     .on("playSong", (message, queue, song) => message.channel.send(
