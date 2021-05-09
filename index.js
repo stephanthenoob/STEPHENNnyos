@@ -1,14 +1,14 @@
 const token = 'Nzg2MTE4MTE4MDQ0NDY3MjYw.X9BvjA.OFWPM12ZIJWmqGAyX7EkpC78lag';
 
 const discord = require('discord.js');
-const distube = require('distube');
+const Distube = require('distube');
 const client = new discord.Client();
 
 client.on('ready', () => {
   console.log(`online ${client.user.tag}`);
 });
 
-const distube = new DisTube(client, { searchSongs: false, emitNewSongOnly: true });
+const Distube = new DisTube(client, { searchSongs: false, emitNewSongOnly: true });
 
 const prefix = 's.';
 
@@ -260,35 +260,35 @@ client.on("message", async (message) => {
     const command = args.shift();
 
     if (command == "play")
-        distube.play(message, args.join(" "));
+        Distube.play(message, args.join(" "));
 
     if (["repeat", "loop"].includes(command))
-        distube.setRepeatMode(message, parseInt(args[0]));
+        Distube.setRepeatMode(message, parseInt(args[0]));
 
     if (command == "stop") {
-        distube.stop(message);
+        Distube.stop(message);
         message.channel.send("Stopped the music!");
     }
 
     if (command == "skip")
-        distube.skip(message);
+        Distube.skip(message);
 
     if (command == "queue") {
-        let queue = distube.getQueue(message);
+        let queue = Distube.getQueue(message);
         message.channel.send('Current queue:\n' + queue.songs.map((song, id) =>
             `**${id + 1}**. ${song.name} - \`${song.formattedDuration}\``
         ).slice(0, 10).join("\n"));
     }
 
     if ([`3d`, `bassboost`, `echo`, `karaoke`, `nightcore`, `vaporwave`].includes(command)) {
-        let filter = distube.setFilter(message, command);
+        let filter = Distube.setFilter(message, command);
         message.channel.send("Current queue filter: " + (filter || "Off"));
     }
 });
 
 const status = (queue) => `Volume: \`${queue.volume}%\` | Filter: \`${queue.filter || "Off"}\` | Loop: \`${queue.repeatMode ? queue.repeatMode == 2 ? "All Queue" : "This Song" : "Off"}\` | Autoplay: \`${queue.autoplay ? "On" : "Off"}\``;
 
-distube
+Distube
     .on("playSong", (message, queue, song) => message.channel.send(
         `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user}\n${status(queue)}`
     ))
