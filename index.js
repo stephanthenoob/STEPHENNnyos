@@ -311,7 +311,8 @@ client.on('message', msg => {
     }
 });
 
-client.on("message", async (msg) => {
+client.on('message', async (msg) => {
+
     if (msg.content.startsWith(prefix + 'give')) {
         const member = msg.mentions.members.first();
         var messagesplit = msg.content.split(" ");
