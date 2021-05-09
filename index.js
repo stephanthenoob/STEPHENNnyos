@@ -406,6 +406,100 @@ client.on('message', async (msg) => {
     }
 });
 
+client.on("message", async (msg) => {
+    if (msg.content.startsWith(prefix + 'give')) {
+        const member = msg.mentions.members.first();
+        var messagesplit = msg.content.split(" ");
+
+        if(msg.author.id != '692580921169281026') {
+            return msg.channel.send('No permission to do that!');
+        }
+
+        if(!member) {
+            return msg.channel.send('What member?')
+        }
+
+        if(!messagesplit[2]) {
+            return msg.channel.send('What ammount of coins?')
+        }
+
+        if(messagesplit[2].isNaN) {
+            return msg.channel.send('Thats not an number.');
+        }
+
+        await mongoCurrency.giveCoins(member.id, msg.guild.id, `${messagesplit[2]}`);
+        msg.reply('I gave ' + `${member}` + ` ${messagesplit[2]}` + ' coins!');
+    }
+
+    if (msg.content.startsWith(prefix + 'work')) {
+        msg.reply('You are currently working for 2 minutes..');
+
+        setTimeout(function(){ 
+            await mongoCurrency.giveCoins(msg.author.id, msg.guild.id, 100);
+        }, 120000);
+    }
+
+    if (msg.content.startsWith(prefix + 'gamble')) {
+        var messagesplit = msg.content.split(" ");
+
+        const member = msg.mentions.members.first() || msg.member;
+
+        const user = await mongoCurrency.findUser(member.id, msg.guild.id);
+
+        if(!messagesplit[1]) {
+            return msg.reply('What ammount?');
+        }
+
+        if(user.coinsInWallet < messagesplit[1]) {
+            return msg.reply('You dont have that much money!');
+        }
+
+        if(messagesplit[1] < 50) {
+            return msg.reply('Please gamble atleast 50 coins.');
+        }
+
+        if(messagesplit[1].isNaN) {
+            return msg.reply('Not a valid number!');
+        }
+
+        msg.reply('Gambling!...');
+
+        setTimeout(function(){ 
+            await mongoCurrency.deductCoins(msg.author.id, msg.guild.id, messagesplit[1]);
+
+            var bot_roll = Math.floor(Math.random() * 6) + 1;
+            var player_roll = Math.floor(Math.random() * 6) + 1;
+
+            const won = new discord.MessageEmbed().setColor('#28fc03').setTitle('You won...').setDescription('Huh.. guess you won.. i rolled ' + bot_roll + ' and you rolled ' + player_roll + ' !. You doubled all your ' + messagesplit[1]).setTimestamp()
+            const lost = new discord.MessageEmbed().setColor('#fc0303').setTitle('You lost!').setDescription('Haha! You lost! i rolled ' + bot_roll + ' and you rolled ' + player_roll + ' !. You lost all your ' + messagesplit[1]).setTimestamp()
+
+            if (bot_roll > player_roll) {
+                msg.channel.send(lost);
+            }
+            else {
+                msg.channel.send(won);
+                await mongoCurrency.giveCoins(msg.author.id, msg.guild.id, messagesplit[1] * 2);
+            }
+
+            if (bot_roll == player_roll) {
+                lost.setTitle('Thats a Tie!');
+                lost.setDescription('We both rolled ' + number + '. You got your money back.');
+                lost.setColor('#fca903');
+                await mongoCurrency.giveCoins(msg.author.id, msg.guild.id, messagesplit[1]);
+            }
+        }, 2000);
+
+
+    }
+
+    if (msg.content.startsWith(prefix + 'balance')) {
+
+        const user = await mongoCurrency.findUser(msg.member.id, msg.guild.id);
+      
+        msg.reply(`Wallet: ${user.coinsInWallet} \n Bank: ${user.coinsInBank}/${user.bankSpace} \n Total: ${user.coinsInBank + user.coinsInWallet}`);
+    }
+});
+
 client.on("message", async (message) => {
     if (message.author.bot) return;
     if (!message.content.startsWith(prefix)) return;
