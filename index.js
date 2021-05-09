@@ -23,7 +23,16 @@ client.on('message', msg => {
     }
 
     if (msg.content.startsWith(prefix + 'delete')) {
-        msg.channel.delete();
+
+        if(msg.member.hasPermission('MANAGE_CHANNELS')) {
+            msg.reply('deleting channel after 3 seconds...');
+            setTimeout(function(){ 
+                msg.channel.delete();
+            }, 3000);
+        }
+        else {
+            msg.reply('no permissions u dum dum')
+        }
     }
 
     if (msg.content.startsWith(prefix + 'destroy')) {
@@ -104,12 +113,57 @@ client.on('message', msg => {
     if (msg.content.toLowerCase() == prefix + 'help') {
         const won = new discord.MessageEmbed().setColor('#039dfc').setTitle('Commands help').setDescription('All commands are in here!').setTimestamp()
         .addFields(
-            { name: 's.ban @user', value: 'Bans someone...' },
-            { name: 's.kick @user', value: 'Kicks someone..', inline: true },
-            { name: 's.dice', value: 'Rolls the dice.', inline: true },
-            { name: 's.guess', value: 'Plays the guess the number game.' },
-            { name: 's.avatar', value: 'Displays your avatar.'},
-            { name: 's.rps', value: 'Play rock paper and scissors.'},
+            { name: 'Moderator commands', value: 's.help mod' },
+            { name: 'Game commands', value: 's.help game', inline: true },
+            { name: 'Utility commands', value: 's.help utility', inline: true },
+            { name: 'Music commands', value: 's.help music' },
+        )
+
+        msg.channel.send(won);
+    }
+
+    if (msg.content.toLowerCase() == prefix + 'help mod') {
+        const won = new discord.MessageEmbed().setColor('#039dfc').setTitle('Moderator commands').setDescription('All commands are in here!').setTimestamp()
+        .addFields(
+            { name: 's.ban @user', value: 'bans user.' },
+            { name: 's.kick @user', value: 'kick user.', inline: true },
+            { name: 's.delete', value: 'deletes channel.', inline: true },
+        )
+
+        msg.channel.send(won);
+    }
+
+    if (msg.content.toLowerCase() == prefix + 'help game') {
+        const won = new discord.MessageEmbed().setColor('#039dfc').setTitle('Game commands').setDescription('Play a game').setTimestamp()
+        .addFields(
+            { name: 's.dice', value: 'rolls the dice' },
+            { name: 's.gayrate', value: 'your gay rate.', inline: true },
+            { name: 's.guess', value: 'play the guess the number game', inline: true },
+            { name: 's.rps', value: 'play rock paper scissors', inline: true },
+        )
+
+        msg.channel.send(won);
+    }
+
+
+
+    if (msg.content.toLowerCase() == prefix + 'help utility') {
+        const won = new discord.MessageEmbed().setColor('#039dfc').setTitle('Utility commands').setDescription('Some utility stuff').setTimestamp()
+        .addFields(
+            { name: 's.avatar', value: 'shows your avatar.' },
+        )
+
+        msg.channel.send(won);
+    }
+
+    if (msg.content.toLowerCase() == prefix + 'help music') {
+        const won = new discord.MessageEmbed().setColor('#039dfc').setTitle('Music commands').setDescription('Play music').setTimestamp()
+        .addFields(
+            { name: 's.play {URL/NAME}', value: 'searches a song and plays it' },
+            { name: 's.stop', value: 'stops the music from playing', inline: true },
+            { name: 's.loop', value: 'loops the queue', inline: true },
+            { name: 's.queue', value: 'shows the queue', inline: true },
+            { name: 's.skip', value: 'skip the current song', inline: true },
         )
 
         msg.channel.send(won);
@@ -267,7 +321,7 @@ client.on("message", async (message) => {
 
     if (command == "stop") {
         distub.stop(message);
-        message.channel.send("Stopped the music!");
+        message.channel.send("Stopped the music.");
     }
 
     if (command == "skip")
@@ -275,40 +329,37 @@ client.on("message", async (message) => {
 
     if (command == "queue") {
         let queue = distub.getQueue(message);
-        message.channel.send('Current queue:\n' + queue.songs.map((song, id) =>
+        message.channel.send('current queue:\n' + queue.songs.map((song, id) =>
             `**${id + 1}**. ${song.name} - \`${song.formattedDuration}\``
         ).slice(0, 10).join("\n"));
     }
 
-    if ([`3d`, `bassboost`, `echo`, `karaoke`, `nightcore`, `vaporwave`].includes(command)) {
+/*    if ([`3d`, `bassboost`, `echo`, `karaoke`, `nightcore`, `vaporwave`].includes(command)) {
         let filter = distub.setFilter(message, command);
         message.channel.send("Current queue filter: " + (filter || "Off"));
-    }
+    }*/
 });
 
-const status = (queue) => `Volume: \`${queue.volume}%\` | Filter: \`${queue.filter || "Off"}\` | Loop: \`${queue.repeatMode ? queue.repeatMode == 2 ? "All Queue" : "This Song" : "Off"}\` | Autoplay: \`${queue.autoplay ? "On" : "Off"}\``;
+const status = (queue) => `volume: \`${queue.volume}%\` ||| loop: \`${queue.repeatMode ? queue.repeatMode == 2 ? "queue" : "current song" : "off"}\` | autoplay: \`${queue.autoplay ? "on" : "off"}\``;
 
 distub
     .on("playSong", (message, queue, song) => message.channel.send(
-        `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user}\n${status(queue)}`
+        `playing \`${song.name}\` - \`${song.formattedDuration}\`\nrequested by: ${song.user}\n${status(queue)}`
     ))
     .on("addSong", (message, queue, song) => message.channel.send(
-        `Added ${song.name} - \`${song.formattedDuration}\` to the queue by ${song.user}`
-    ))
-    .on("playList", (message, queue, playlist, song) => message.channel.send(
-        `Play \`${playlist.name}\` playlist (${playlist.songs.length} songs).\nRequested by: ${song.user}\nNow playing \`${song.name}\` - \`${song.formattedDuration}\`\n${status(queue)}`
+        `added ${song.name} - \`${song.formattedDuration}\` to queue by ${song.user}`
     ))
     .on("addList", (message, queue, playlist) => message.channel.send(
-        `Added \`${playlist.name}\` playlist (${playlist.songs.length} songs) to queue\n${status(queue)}`
+        `added \`${playlist.name}\` playlist (${playlist.songs.length} songs) to queue\n${status(queue)}`
     ))
     .on("searchResult", (message, result) => {
         let i = 0;
-        message.channel.send(`**Choose an option from below**\n${result.map(song => `**${++i}**. ${song.name} - \`${song.formattedDuration}\``).join("\n")}\n*Enter anything else or wait 60 seconds to cancel*`);
+        message.channel.send(`**choose an option from below**\n${result.map(song => `**${++i}**. ${song.name} - \`${song.formattedDuration}\``).join("\n")}\n*Enter anything else or wait 60 seconds to cancel*`);
     })
     .on("searchCancel", (message) => message.channel.send(`Searching canceled`))
     .on("error", (message, e) => {
         console.error(e)
-        message.channel.send("An error encountered: " + e);
+        message.channel.send("an error encountered: " + e);
     });
 
 client.login(process.env.STEP_TOKEN);
