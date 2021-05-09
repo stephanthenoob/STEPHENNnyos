@@ -369,7 +369,7 @@ client.on("message", async (msg) => {
 
         msg.reply('Gambling!...');
 
-        setTimeout(function(){ 
+        setTimeout(async function(){ 
             await mongoCurrency.deductCoins(msg.author.id, msg.guild.id, messagesplit[1]);
 
             var bot_roll = Math.floor(Math.random() * 6) + 1;
