@@ -59,7 +59,7 @@ client.on('message', msg => {
             return message.channel.send('Thats not an number.');
         }
 
-        await mongoCurrency.giveCoins(member.id, msg.guild.id, `${messagesplit[2]}`);
+        mongoCurrency.giveCoins(member.id, msg.guild.id, `${messagesplit[2]}`);
         msg.reply('I gave ' + `${member}` + ` ${messagesplit[2]}` + ' coins!');
     }
 
