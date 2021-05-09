@@ -311,8 +311,7 @@ client.on('message', msg => {
     }
 })
 
-
-async function doSomethingAsync() {
+client.on("message", async (msg) => {
     if (msg.content.startsWith(prefix + 'give')) {
         const member = msg.mentions.members.first();
         var messagesplit = msg.content.split(" ");
@@ -340,7 +339,7 @@ async function doSomethingAsync() {
     if (msg.content.startsWith(prefix + 'work')) {
         msg.reply('You are currently working for 2 minutes..');
 
-        setTimeout(function(){ 
+        setTimeout(async function() { 
             await mongoCurrency.giveCoins(msg.author.id, msg.guild.id, 100);
         }, 120000);
     }
@@ -399,15 +398,9 @@ async function doSomethingAsync() {
     }
 
     if (msg.content.startsWith(prefix + 'balance')) {
-
         const user = await mongoCurrency.findUser(msg.member.id, msg.guild.id);
-      
         msg.reply(`Wallet: ${user.coinsInWallet} \n Bank: ${user.coinsInBank}/${user.bankSpace} \n Total: ${user.coinsInBank + user.coinsInWallet}`);
     }
-}
-
-client.on("message", async (msg) => {
-   doSomethingAsync();
 });
 
 client.on("message", async (message) => {
