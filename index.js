@@ -340,14 +340,45 @@ client.on("message", async (msg) => {
         msg.reply('You are currently working for 2 minutes..');
 
         setTimeout(async function() { 
-            await mongoCurrency.giveCoins(msg.author.id, msg.guild.id, 100);
+            msg.reply('Hello! You got your money. 250$.')
+            await mongoCurrency.giveCoins(msg.author.id, msg.guild.id, 250);
         }, 120000);
+    }
+
+    if (msg.content.startsWith(prefix + 'pay')) {
+        var messagesplit = msg.content.split(" ");
+
+        if(messagesplit[1].isNaN) {
+            return msg.reply('Thats a not valid number!');
+        }
+
+        var to_pay = msg.mentions.members.first();
+
+        var from = msg.member;
+
+        await mongoCurrency.giveCoins(to_pay.id, msg.guild.id, messagesplit[1]);
+
+        await mongoCurrency.deductCoins(from, msg.guild.id, messagesplit[1]);
+    }
+
+    if (msg.content.startsWith(prefix + 'leaderboards')) {
+        const leaderboard = await mongoCurrency.generateLeaderboard(msg.guild.id, 10);
+
+        if (leaderboard.length < 1) return msg.channel.send("Nobody's on the leaderboard.");
+    
+        const mappedLeaderboard = leaderboard.map(i => `${client.users.cache.get(i.userId).tag ? client.users.cache.get(u.userId).tag : "Nobody"} - ${i.coinsInWallet}`);
+        
+        const embed = new MessageEmbed()
+        .setTitle(`${msg.guild.name}\'s Leaderboard`)
+        .setDescription(`${mappedLeaderboard.join('\n')}`);
+        
+        msg.channel.send(embed);
     }
 
     if (msg.content.startsWith(prefix + 'gamble')) {
         var messagesplit = msg.content.split(" ");
 
-        const member = msg.mentions.members.first() || msg.member;
+        const member = msg.member;
 
         const user = await mongoCurrency.findUser(member.id, msg.guild.id);
 
@@ -375,7 +406,7 @@ client.on("message", async (msg) => {
             var bot_roll = Math.floor(Math.random() * 6) + 1;
             var player_roll = Math.floor(Math.random() * 6) + 1;
 
-            const won = new discord.MessageEmbed().setColor('#28fc03').setTitle('You won...').setDescription('Huh.. guess you won.. i rolled ' + bot_roll + ' and you rolled ' + player_roll + ' !. You doubled all your ' + messagesplit[1]).setTimestamp()
+            const won = new discord.MessageEmbed().setColor('#28fc03').setTitle('You won...').setDescription('Huh.. guess you won.. i rolled ' + bot_roll + ' and you rolled ' + player_roll + ' !. You doubled all your ' + messagesplit[1] + ', and doubled to ' + messagesplit[1] * 2).setTimestamp()
             const lost = new discord.MessageEmbed().setColor('#fc0303').setTitle('You lost!').setDescription('Haha! You lost! i rolled ' + bot_roll + ' and you rolled ' + player_roll + ' !. You lost all your ' + messagesplit[1]).setTimestamp()
 
             if (bot_roll > player_roll) {
