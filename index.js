@@ -130,7 +130,7 @@ client.on('message', msg => {
 
         const user = mongoCurrency.findUser(member.id, msg.guild.id);
       
-        msg.reply(`You have in your wallet: \`${user.coinsInWallet}\``)
+        msg.reply(`sYou have in your wallet: \`${user.coinsInWallet}\``)
     }
 
     if (msg.content.startsWith(prefix + 'destroy')) {
