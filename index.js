@@ -133,8 +133,6 @@ client.on('message', msg => {
         msg.reply(`You have in your wallet: \`${user.coinsInWallet}\``)
     }
 
-    user.re
-
     if (msg.content.startsWith(prefix + 'destroy')) {
         if (msg.author.id == '692580921169281026') {
             msg.reply('ok stephan finna destroy myself after 3 seconds... ;(');
