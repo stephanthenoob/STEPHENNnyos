@@ -309,10 +309,9 @@ client.on('message', msg => {
                  msg.reply('Game over... you didnt answer in time.');
         });
     }
-})
+});
 
-client.on("message", async (message) => {
-
+client.on("message", async (msg) => {
     if (msg.content.startsWith(prefix + 'give')) {
         const member = msg.mentions.members.first();
         var messagesplit = msg.content.split(" ");
@@ -404,7 +403,7 @@ client.on("message", async (message) => {
       
         msg.reply(`Wallet: ${user.coinsInWallet} \n Bank: ${user.coinsInBank}/${user.bankSpace} \n Total: ${user.coinsInBank + user.coinsInWallet}`);
     }
-})
+});
 
 client.on("message", async (message) => {
     if (message.author.bot) return;
