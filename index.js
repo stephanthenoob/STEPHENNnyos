@@ -86,7 +86,7 @@ client.on('message', msg => {
             return msg.reply('You dont have that much money!');
         }
 
-        if(!messagesplit[1] < 50) {
+        if(messagesplit[1] < 50) {
             return msg.reply('Please gamble atleast 50 coins.');
         }
 
